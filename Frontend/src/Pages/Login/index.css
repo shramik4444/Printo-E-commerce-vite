@@ -1,0 +1,19 @@
+.login-form{
+    display: flex;
+    flex-direction : column;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    align-items: center;
+}
+login-container{
+    display : flex;
+    flex-direction : row;
+    justify-content: center;
+    align-items: center;
+    gap:5px;
+}
+.inp-style{
+    border : 1px solid black;
+
+}

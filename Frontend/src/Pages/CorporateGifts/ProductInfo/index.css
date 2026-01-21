@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main-cont{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50vw;
+}
+.quantity-cont{
+    width:100%;
+    
+}
+.input-cont{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    align-items: end;
+}
+.price-tag-cont{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.total-price{
+    display:flex;
+    flex-direction: row;
+}
+.price-container{
+    display:flex;
+    flex-direction: row;
+    justify-content:space-between;
+    width:100%;
+    margin-top: 30px;
+}
+
+.action-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 250px;
+}
+.btn-create-design {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-upload {
+  background: #7c3aed;
+  color: white;
+}
+
+.btn-upload:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.btn-create-design {
+  background: white;
+  color: #333;
+  border: 2px solid #e0e0e0;
+}
+
+.btn-create-design:hover {
+  background: #f8f9fa;
+  border-color: #7c3aed;
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
