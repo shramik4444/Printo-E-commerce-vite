@@ -6,8 +6,8 @@ const ProductFullSpecs = ({ specs }) => {
 
     const [activeTab, setActiveTab] = useState('overview');
     if (!specs) return null;
-    const { overview, specifications, designGuidelines, washCare } = specs;
-    console.log("specssss- ----->", overview, specifications, designGuidelines, washCare);
+    const { overview, specifications, designguidelines, washcareinstructions } = specs;
+    console.log("specssss- ----->", overview, specifications, designguidelines, washcareinstructions);
     return (
         <div className='product-tab w-full'>
             <div className='tab-header'>
@@ -29,21 +29,21 @@ const ProductFullSpecs = ({ specs }) => {
                     type="button"
                     className={activeTab == 'design guidelines' ? 'active' : ''}
                     onClick={() => setActiveTab('design guidelines')}>
-                    designguidelines
+                    Design Guidelines
                 </button>
 
                 <button
                     type="button"
                     className={activeTab == 'washcare instructions' ? 'active' : ''}
                     onClick={() => setActiveTab('washcare instructions')}>
-                    washcareinstructions
+                    Wash Care Instructions
                 </button>
             </div>
             <div className='tab-content text-black'>
                 {activeTab === 'overview' && <div>{overview}</div>}
                 {activeTab === 'specifications' && <div>{specifications}</div>}
-                {activeTab === 'design guidelines' && <div>{designGuidelines}</div>}
-                {activeTab === 'washcare instructions' && <div>{washCare}</div>}
+                {activeTab === 'design guidelines' && <div>{designguidelines}</div>}
+                {activeTab === 'washcare instructions' && <div>{washcareinstructions}</div>}
             </div>
         </div>
     )

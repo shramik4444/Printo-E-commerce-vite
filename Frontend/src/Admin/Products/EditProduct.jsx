@@ -41,8 +41,8 @@ export default function EditProduct() {
     const [specs, setSpecs] = useState({
         overview: "",
         specifications: "",
-        designGuidelines: "",
-        washCare: ""
+        designguidelines: "",
+        washcareinstructions: ""
     });
 
     const [carousels, setCarousels] = useState({
@@ -57,11 +57,7 @@ export default function EditProduct() {
         const { name, value } = e.target;
 
         setDetails((prev) => ({
-            ...prev,
-            [name]:
-                name === "features"
-                    ? value.split("\n").filter(Boolean)
-                    : value
+            ...prev, [name]: name === "features" ? value.split("\n").filter(Boolean) : value
         }));
     };
 
@@ -102,8 +98,8 @@ export default function EditProduct() {
             setSpecs({
                 overview: p.specifications?.overview || "",
                 specifications: p.specifications?.specifications || "",
-                designGuidelines: p.specifications?.designGuidelines || "",
-                washCare: p.specifications?.washCare || ""
+                designguidelines: p.specifications?.designGuidelines || "",
+                washcareinstructions: p.specifications?.washCare || ""
             });
 
 

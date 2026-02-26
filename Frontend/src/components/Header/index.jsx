@@ -13,6 +13,18 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const username = localStorage.getItem("username");
+
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+    navigate("/login");
+  };
+  const isLoggedIn = !!localStorage.getItem("token");
+
+
   const cartPage = () => {
     navigate("/cart");
     console.log("cart page clicked ");
@@ -67,7 +79,21 @@ const Header = () => {
             <div className="header-right-logo">
 
               <a className="header-link">Help Center</a>
-              <button className="login-btn">Login / Signup</button>
+              {isLoggedIn ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-gray-700">
+                    Hi! {username}
+                  </span>
+                  <button className="login-btn" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button className="login-btn" onClick={() => navigate("/login")}>
+                  Login / Signup
+                </button>
+              )}
+
               <div className="cart-icon" onClick={cartPage}>
                 <span className="cart-count">0</span>
                 🛒

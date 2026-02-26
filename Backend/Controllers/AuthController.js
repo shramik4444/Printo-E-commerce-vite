@@ -87,7 +87,8 @@ exports.userLogin = async (req, res) => {
         const token = generateToken({
             id: user.id,
             role: user.role,
-            email: user.email
+            email: user.email,
+            name: user.name
         });
 
         res.json({
@@ -96,7 +97,8 @@ exports.userLogin = async (req, res) => {
             user: {
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role
             }
         });
 

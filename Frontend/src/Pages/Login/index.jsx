@@ -12,7 +12,9 @@ export default function LoginPage() {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError(""); // clear error as user types
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +25,8 @@ export default function LoginPage() {
     try {
       const res = await axios.post("http://localhost:5002/auth/login", form);
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
+      localStorage.setItem("role", res.data.user.role);
+      localStorage.setItem("username", res.data.user.name);
       console.log("Response from HTTP login post--->", res.data);
       navigate('/'); // SPA-safe navigation
     }
@@ -97,10 +100,16 @@ export default function LoginPage() {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg font-semibold text-white
+    ${loading ? "bg-orange-400 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700"}
+  `}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
+          {error && (
+            <p className="text-red-500 text-sm mt-4 text-center">{error}</p>
+          )}
         </form>
       </div>
     </div>

@@ -27,26 +27,6 @@ export default function Cart() {
 
 
 
-    // const { id } = useParams();
-    // const [image, setImage] = useState([]);
-
-
-    // useEffect(() => {
-
-    //     axios.get(`http://localhost:5002/apparel/products/${id}`)
-    //         .then(res => {
-    //             const row = res.data;
-    //             const data = typeof row === "string" ? JSON.parse(row.data) : row.data;
-    //             setImage(res.data.images);
-    //         })
-    // }, [id])
-
-    // console.log("list of imagesssssssss", id);
-
-
-
-
-
 
     useEffect(() => {
         axios

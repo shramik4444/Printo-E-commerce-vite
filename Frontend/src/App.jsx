@@ -8,7 +8,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import EditProduct from "./Admin/Products/EditProduct";
-
+import AddProduct from './Admin/Products/AddProduct';
 import ApparelProductPage from './Pages/Apparel/ApparelProductPage';
 import CorporateGiftsView from './Pages/CorporateGifts/CorporateGiftsView';
 import ProductPage from './Pages/CorporateGifts/ProductPage';
@@ -23,8 +23,9 @@ function App() {
   return (
     <Routes>
 
-      <Route path='/login' element={<Login />} />
+
       <Route path="/" element={<Home />} />
+      <Route path='/login' element={<Login />} />
       <Route path='/apparel/products' element={<AllProducts />} />
       <Route path="/apparel/products/:id" element={<ApparelProductPage />} />
       <Route path="/corporate-gifts" element={<CorporateGiftsView />} />
@@ -34,15 +35,18 @@ function App() {
 
 
 
-      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLogin />} />
 
       <Route path="/admin" element={<AdminRoute />}>
+
+
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="products" element={<ProductList />} />
+        <Route path="/admin/products/add" element={<AddProduct />} />
         <Route path="products/edit/:id" element={<EditProduct />} />
       </Route>
 
-
+      {/* <Route path="*" element={<Navigate to="/admin/dashboard" replace />} /> */}
 
 
 

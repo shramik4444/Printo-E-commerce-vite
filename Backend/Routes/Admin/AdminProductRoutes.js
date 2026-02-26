@@ -5,9 +5,6 @@ const role = require('../../Middleware/Role.middleware.js');
 const router = express.Router();
 
 
-
-
-
 router.get('/products', auth, role('admin'), async (req, res) => {
 
     try {
@@ -28,9 +25,6 @@ router.get('/products', auth, role('admin'), async (req, res) => {
 
 
 
-
-
-
 });
 
 
@@ -38,26 +32,29 @@ router.get('/products', auth, role('admin'), async (req, res) => {
 
 
 
-// router.get("/products/:id", auth, role("admin"), async (req, res) => {
-//     const productId = req.params.id;
+router.post("/products", auth, role("admin"), async (req, res) => {
+    const { name, data } = req.body;
 
-//     try {
-//         const [rows] = await db.promise().query(
-//             "SELECT id, name, data FROM apparel_products WHERE id = ?",
-//             [productId]
-//         );
+    if (!name || !data) {
+        return res.status(400).json({ error: "Name and data required" });
+    }
 
-//         if (!rows.length) {
-//             return res.status(404).json({ error: "Product not found" });
-//         }
+    try {
+        const [result] = await db.promise().query(
+            "INSERT INTO apparel_products (name, data) VALUES (?, ?)",
+            [name, JSON.stringify(data)]
+        );
 
-//         res.json(rows[0]);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: "Database error" });
-//     }
-// });
+        res.status(201).json({
+            message: "Product created",
+            productId: result.insertId
+        });
 
+    } catch (err) {
+        console.error("CREATE PRODUCT ERROR:", err);
+        res.status(500).json({ error: "Database error" });
+    }
+});
 
 
 
@@ -165,22 +162,6 @@ router.get("/products/:id", auth, role("admin"), async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.put("/products/:id", auth, role("admin"), async (req, res) => {
     const { name, data } = req.body;
     const productId = req.params.id;
@@ -234,9 +215,6 @@ router.put("/products/:id", auth, role("admin"), async (req, res) => {
 
 
 
-
-
-
 router.put('/products/:id/details', auth, role('admin'), async (req, res) => {
     const { tagline, features, keyFeature, delivery, additionalInfo } = req.body;
     const { id } = req.params;
@@ -273,13 +251,16 @@ router.put('/products/:id/details', auth, role('admin'), async (req, res) => {
 
 
 
-router.get("/products/:id/carousels", auth, role("admin"), async (req, res) => {
+router.get(
+    "/products/:id/carousels",
+    auth,
+    role("admin"),
+    async (req, res) => {
+        const { id } = req.params;
 
-    const { id } = req.params;
-
-    try {
-        const [rows] = await db.promise().query(
-            `
+        try {
+            const [rows] = await db.promise().query(
+                `
         SELECT
           id,
           product_id,
@@ -292,74 +273,112 @@ router.get("/products/:id/carousels", auth, role("admin"), async (req, res) => {
         WHERE product_id = ?
         ORDER BY carousel_type, card_order
         `,
-            [id]
-        );
+                [id]
+            );
 
-        // Group by type
-        const grouped = {
-            primary: [],
-            secondary: []
-        };
-
-        rows.forEach(row => {
-            if (row.carousel_type === "primary") {
-                grouped.primary.push(row);
-            } else {
-                grouped.secondary.push(row);
-            }
-        });
-        const row = rows[0];
-        res.json(rows);
-
-    } catch (err) {
-        console.error("FETCH CAROUSELS ERROR:", err);
-        res.status(500).json({ error: "Database error" });
+            res.json(rows);
+        } catch (err) {
+            console.error("FETCH CAROUSELS ERROR:", err);
+            res.status(500).json({ error: "Database error" });
+        }
     }
-}
+);
+
+
+
+router.put(
+    "/products/:id/carousels",
+    auth,
+    role("admin"),
+    async (req, res) => {
+        const { id: productId } = req.params;
+        const { carousels } = req.body;
+
+        if (!Array.isArray(carousels)) {
+            return res.status(400).json({ error: "Invalid payload" });
+        }
+
+        const conn = await db.promise().getConnection();
+
+        try {
+            await conn.beginTransaction();
+
+            // 🔥 wipe existing
+            await conn.query(
+                "DELETE FROM product_carousels WHERE product_id = ?",
+                [productId]
+            );
+
+            // ✅ USE carousels (NOT normalized)
+            for (const c of carousels) {
+                if (!c.image_url || !c.carousel_type) {
+                    throw new Error("Invalid carousel data");
+                }
+
+                await conn.query(
+                    `
+        INSERT INTO product_carousels
+        (
+          product_id,
+          carousel_type,
+          card_order,
+          image_url,
+          card_name,
+          card_description
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+        `,
+                    [
+                        productId,
+                        c.carousel_type,
+                        c.card_order || 1,
+                        c.image_url,
+                        c.card_name || null,
+                        c.card_description || null
+                    ]
+                );
+            }
+
+
+            await conn.commit();
+            res.json({ message: "Carousels saved successfully" });
+
+        } catch (err) {
+            await conn.rollback();
+            console.error("SAVE CAROUSELS ERROR:", err);
+            res.status(500).json({ error: "Database error" });
+        } finally {
+            conn.release();
+        }
+    }
 );
 
 
 
 
 
+router.delete(
+    "/products/carousels/:id",
+    auth,
+    role("admin"),
+    async (req, res) => {
+        const { id } = req.params;
+
+        try {
+            await db.promise().query(
+                "DELETE FROM product_carousels WHERE id = ?",
+                [id]
+            );
+
+            res.json({ message: "Carousel deleted" });
+        } catch (err) {
+            console.error("DELETE CAROUSEL ERROR:", err);
+            res.status(500).json({ error: "Database error" });
+        }
+    }
+);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-// router.put('/products/:id/details', auth, role('admin'), async (req, res) => {
-//     const { tagline, features, keyFeature, delivery, additionalInfo } = req.body;
-//     const { id } = req.params;
-
-//     try {
-//         await db.promise().query(`
-//       INSERT INTO product_details
-//       (product_id, tagline, features, key_feature, delivery_info, additional_info)
-//       VALUES (?, ?, ?, ?, ?, ?)
-//       ON DUPLICATE KEY UPDATE
-//         tagline = VALUES(tagline),
-//         features = VALUES(features),
-//         key_feature = VALUES(key_feature),
-//         delivery_info = VALUES(delivery_info),
-//         additional_info = VALUES(additional_info)
-//     `, [id, tagline, features, keyFeature, delivery, additionalInfo]);
-
-//         res.json({ message: 'Product details updated' });
-
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Database error' });
-//     }
-// });
 
 
 
@@ -386,17 +405,6 @@ router.put('/products/:id/specs', auth, role('admin'), async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
 

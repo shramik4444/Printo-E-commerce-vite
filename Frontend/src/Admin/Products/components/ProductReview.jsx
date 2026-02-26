@@ -18,6 +18,7 @@ export default function ProductPreview({ product, details, specs, carousels }) {
         specifications: specs,
         carousels
     };
+    console.log("preview product -----> ", specs);
 
     return (
         <div className="bg-white text-neutral-900 rounded-lg overflow-hidden">
