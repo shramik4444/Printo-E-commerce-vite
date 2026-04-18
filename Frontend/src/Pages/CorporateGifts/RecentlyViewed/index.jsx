@@ -13,7 +13,7 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 //   { title: 'Rockstar Spill Free - White', price: '₹1,522.50 for 1 piece', img: 'https://printo-s3.dietpixels.net/site/20220713_065334817536_9509dc_Rockstar_Spill_Free_White_Bottle_1.jpg?quality=70&format=webp&w=640' },
 // ];
 
-const RecentlyViewed = ({ scarousel }) => {
+const RecentlyViewed = ({ scarousel = [] }) => {
   const carouselRef = useRef(null);
 
   const scroll = (direction) => {

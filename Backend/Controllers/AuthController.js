@@ -18,6 +18,7 @@ exports.adminLogin = async (req, res) => {
         );
 
         console.log("DB RESULT:", rows);
+        console.log("length of rows---------------------:", rows.length);
 
         if (!rows.length) {
             return res.status(401).json({ message: "Invalid credentials" });

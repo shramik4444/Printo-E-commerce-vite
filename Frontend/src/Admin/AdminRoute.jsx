@@ -5,7 +5,7 @@ export default function AdminRoute() {
     const role = localStorage.getItem("role");
 
     if (!token || role !== "admin") {
-        return <Navigate to="/admin/login" replace />;
+        return <Navigate to="/admin" replace />; // fix path too
     }
 
     return <Outlet />;

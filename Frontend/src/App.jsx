@@ -21,9 +21,45 @@ import Cart from './Cart/Cart';
 
 function App() {
   return (
+
     <Routes>
 
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/apparel/products" element={<AllProducts />} />
+      <Route path="/apparel/products/:id" element={<ApparelProductPage />} />
+      <Route path="/corporate-gifts" element={<CorporateGiftsView />} />
+      <Route path="/product" element={<ProductPage />} />
+      <Route path="/cart" element={<Cart />} />
 
+      {/* Admin Login */}
+      <Route path="/admin" element={<AdminLogin />} />
+
+      {/* Protected Admin */}
+      <Route path="/admin/*" element={<AdminRoute />}>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="products" element={<ProductList />} />
+        <Route path="products/add" element={<AddProduct />} />
+        <Route path="products/edit/:id" element={<EditProduct />} />
+      </Route>
+
+    </Routes>
+
+
+
+
+
+
+  );
+}
+
+export default App;
+
+
+
+
+
+{/* 
       <Route path="/" element={<Home />} />
       <Route path='/login' element={<Login />} />
       <Route path='/apparel/products' element={<AllProducts />} />
@@ -46,7 +82,7 @@ function App() {
         <Route path="products/edit/:id" element={<EditProduct />} />
       </Route>
 
-      {/* <Route path="*" element={<Navigate to="/admin/dashboard" replace />} /> */}
+      <Route path="*" element={<Navigate to="/admin/dashboard" replace />} /> */}
 
 
 
@@ -54,9 +90,3 @@ function App() {
 
 
 
-    </Routes>
-
-  );
-}
-
-export default App;

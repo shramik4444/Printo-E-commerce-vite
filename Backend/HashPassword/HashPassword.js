@@ -1,5 +1,5 @@
-const bcrpyt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
-bcrpyt.hash("gopi1234", 10).then(hash => {
+bcrypt.hash("shramik1234", 10).then(hash => {
     console.log(hash);
 });
